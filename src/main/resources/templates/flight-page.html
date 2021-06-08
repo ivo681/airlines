@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+            <form class="form" th:object="${flightBindingModel}" th:action="@{/flights/add}"
+                  th:method="post">
+                <h1 class="header-home">Add A Flight</h1>
+                <h3 th:if="${invalidDateAndTimes}"
+                    class="text-light form-text bg-danger rounded">Departure and Arrival dates & times cannot be equal</h3>
+                <h3 th:if="${existingFlight}"
+                    class="text-light form-text bg-danger rounded">There is already a flight for this airplane for this exact departure time</h3>
+                <!-- Form start -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="airplaneId">Airplane</label>
+                            <select th:field="*{airplaneId}" th:errorclass="is-invalid" id="airplaneId" name="airplaneId"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="plane : ${existingPlanes}" th:value="${plane.getId()}"
+                                        th:utext="${plane.getAirlineUser() + ' ' + plane.getModel() + ' ' + plane.getRegistrationNumber()}"></option>
+                            </select>
+                            <small id="airplaneIdError" th:each="e : ${#fields.errors('airplaneId')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="flightRouteId">Flight route</label>
+                            <select th:field="*{flightRouteId}" th:errorclass="is-invalid" id="flightRouteId" name="flightRouteId"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="route : ${existingRoutes}" th:value="${route.getId()}"
+                                        th:utext="${route.getDeparture_description() + ' ' + route.getArrival_description()}"></option>
+                            </select>
+                            <small id="flightRouteIdError" th:each="e : ${#fields.errors('flightRouteId')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="departureDateAndTime">Departure Date & Time</label>
+                            <input th:field="*{departureDateAndTime}" th:errorclass="is-invalid" id="departureDateAndTime" name="departureDateAndTime"
+                                   type="datetime-local"
+                                    class="form-control input-md" required autofocus>
+                            <small id="departureDateAndTimeError" th:each="e : ${#fields.errors('departureDateAndTime')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="arrivalDateAndTime">Arrival Date & Time</label>
+                            <input th:field="*{arrivalDateAndTime}" th:errorclass="is-invalid" id="arrivalDateAndTime"
+                                   name="arrivalDateAndTime" type="datetime-local"
+                                   class="form-control input-md" required autofocus>
+                            <small th:each="e : ${#fields.errors('arrivalDateAndTime')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="singlebutton" name="singlebutton" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+
+                <h2 class="header-home">Flights</h2>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">Airplane</th>
+                        <th onclick="sortTable(1)" class="text-center">Flight Route</th>
+                        <th onclick="sortTable(1)" class="text-center">Departure Date & Time</th>
+                        <th onclick="sortTable(1)" class="text-center">Arrival Date & Time</th>
+                        <th class="text-center"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="flight : ${existingFlights}" th:object="${flight}">
+                        <td th:text="*{airplane}" class="text-center"></td>
+                        <td th:text="*{flightRoute}" class="text-center"></td>
+                        <td th:text="*{departureDateAndTime}" class="text-center"></td>
+                        <td th:text="*{arrivalDateAndTime}" class="text-center"></td>
+                        <td class="text-center">
+                            <a th:href="@{/flights/flight-list/{id}(id = *{id})}"
+                               class="btn btn-primary btn-xs"><span class="glyphicon "></span>
+                                Flight list</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

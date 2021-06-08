@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+        <div class="form">
+
+<!--            <h1 class="fw-light">Doctor Menu</h1>-->
+            <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+            <div class="row justify-content-center">
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Airports</h5>
+                            <a th:href="@{/airports/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Airlines</h5>
+                            <a th:href="@{/airlines/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Airplanes</h5>
+                            <a th:href="@{/airplanes/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Flight routes</h5>
+                            <a th:href="@{/flight-routes/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Flights</h5>
+                            <a th:href="@{/flights/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Flight Crew</h5>
+                            <a th:href="@{/flight-crew/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Passengers</h5>
+                            <a th:href="@{/passengers/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+</body>
+
+</html>

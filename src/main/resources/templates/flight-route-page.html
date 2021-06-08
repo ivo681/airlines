@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+            <form class="form" th:object="${flightRouteBindingModel}" th:action="@{/flight-routes/add}"
+                  th:method="post">
+                <h1 class="header-home">Add A Flight Route</h1>
+                <h3 th:if="${existingRoute}"
+                    class="text-light form-text bg-danger rounded">There is already a flight route with the given departure and arrival points</h3>
+                <h3 th:if="${sameSelection}"
+                    class="text-light form-text bg-danger rounded">Please select two different airports for departure and arrival</h3>
+                <!-- Form start -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="departure_airport_id">Departing from:</label>
+                            <select th:field="*{departure_airport_id}" th:errorclass="is-invalid" id="departure_airport_id" name="departure_airport_id"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="airport : ${airports}" th:value="${airport.getId()}" th:utext="${airport.getAirportName() + ' (' +
+                                airport.getCountry() + ')'}"></option>
+                            </select>
+                            <small id="departure_airport_idError" th:each="e : ${#fields.errors('departure_airport_id')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="arrival_airport_id">Arriving at:</label>
+                            <select th:field="*{arrival_airport_id}" th:errorclass="is-invalid" id="arrival_airport_id" name="arrival_airport_id"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="airport : ${airports}" th:value="${airport.getId()}"
+                                        th:utext="${airport.getAirportName() + ' (' +
+                                airport.getCountry() + ')'}"></option>
+                            </select>
+                            <small id="arrival_airport_idError" th:each="e : ${#fields.errors('arrival_airport_id')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="singlebutton" name="singlebutton" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+
+                <h2 class="header-home">Flight Routes</h2>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+<!--                        <th onclick="sortTable(0)" class="text-center">ID</th>-->
+                        <th onclick="sortTable(1)" class="text-center">Departure from</th>
+                        <th onclick="sortTable(2)" class="text-center">Arrival at</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="flightRoute, stat : ${existingRoutes}" th:object="${flightRoute}">
+<!--                        <td th:text="${stat.index + 1}" class="text-center"></td>-->
+                        <td th:text="*{departure_description}" class="text-center"></td>
+                        <td th:text="*{arrival_description}" class="text-center"></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

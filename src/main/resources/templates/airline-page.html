@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+            <form class="form" th:object="${airlineBindingModel}" th:action="@{/airlines/add}"
+                  th:method="post">
+                <h1 class="header-home">Add An Airline</h1>
+                <h3 th:if="${existingAirline}"
+                    class="text-light form-text bg-danger rounded">There is an airline with the given name and/or registration number</h3>
+                <!-- Form start -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="airlineName">Airline Name</label>
+                            <input th:field="*{airlineName}" th:errorclass="is-invalid" id="airlineName" name="airlineName" type="text"
+                                   placeholder="Airline Name..." class="form-control input-md" minlength="3" required autofocus>
+                            <small id="airlineNameError" th:each="e : ${#fields.errors('airlineName')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="registrationNumber">Registration Number</label>
+                            <input th:field="*{registrationNumber}" th:errorclass="is-invalid" id="registrationNumber" name="registrationNumber" type="number"
+                                   placeholder="Registration Number..." min="10000000" maxlength="99999999" class="form-control input-md" required autofocus>
+                            <small id="registrationNumberError" th:each="e : ${#fields.errors('registrationNumber')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="singlebutton" name="singlebutton" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+
+                <h2 class="header-home">Airlines</h2>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">ID</th>
+                        <th onclick="sortTable(1)" class="text-center">Name</th>
+                        <th onclick="sortTable(2)" class="text-center">Registration Number</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="airline, stat : ${existingAirlines}" th:object="${airline}">
+                        <td th:text="${stat.index + 1}" class="text-center"></td>
+                        <td th:text="*{airlineName}" class="text-center"></td>
+                        <td th:text="*{registrationNumber}" class="text-center"></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

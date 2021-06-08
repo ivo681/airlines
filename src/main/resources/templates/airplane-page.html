@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+            <form class="form" th:object="${airplaneBindingModel}" th:action="@{/airplanes/add}"
+                  th:method="post">
+                <h1 class="header-home">Add An Airplane</h1>
+                <h3 th:if="${existingAirplane}"
+                    class="text-light form-text bg-danger rounded">There is already an airplane with the given registration number</h3>
+                <!-- Form start -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="manufacturer">Manufacturer</label>
+                            <select th:field="*{manufacturer}" th:errorclass="is-invalid" id="manufacturer" name="manufacturer"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="m : ${T(is.job.airlines.model.enums.ManufacturerEnum).values()}" th:value="${m.name()}" th:text="${m.name()}"></option>
+                            </select>
+                            <small id="countryError" th:each="e : ${#fields.errors('manufacturer')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="model">Plane model</label>
+                            <input th:field="*{model}" th:errorclass="is-invalid" id="model" name="model" type="text"
+                                   placeholder="Airport model..." class="form-control input-md" required autofocus>
+                            <small id="dateError" th:each="e : ${#fields.errors('model')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="airplaneRegistrationNumber">Registration Number</label>
+                            <input th:field="*{registrationNumber}" th:errorclass="is-invalid" id="airplaneRegistrationNumber" name="registrationNumber" type="number"
+                                   placeholder="Registration Number..." min="10000000" maxlength="99999999" class="form-control input-md" required autofocus>
+                            <small th:each="e : ${#fields.errors('registrationNumber')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="parkingArea">Parking area in m2</label>
+                            <input th:field="*{parkingArea}" th:errorclass="is-invalid" id="parkingArea" name="parkingArea" type="number"
+                                   placeholder="Parking area..." min="1" class="form-control input-md" required autofocus>
+                            <small id="parkingAreaError" th:each="e : ${#fields.errors('parkingArea')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label" for="capacity">Capacity</label>
+                            <input th:field="*{capacity}" th:errorclass="is-invalid" id="capacity" name="capacity" type="number"
+                                   placeholder="Capacity..." min="1" class="form-control input-md" required autofocus>
+                            <small id="capacityError" th:each="e : ${#fields.errors('capacity')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="airlineOwnerIdNumber">Airline owner:</label>
+                            <select th:field="*{airlineOwnerIdNumber}" th:errorclass="is-invalid" id="airlineOwnerIdNumber" name="airlineOwnerIdNumber"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="airline : ${existingAirlines}" th:value="${airline.getId()}"
+                                        th:text="${airline.getAirlineName()}"></option>
+                            </select>
+                            <small id="airlineOwnerIdError" th:each="e : ${#fields.errors('airlineOwnerIdNumber')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="airlineUserIdNumber">Airline user:</label>
+                            <select th:field="*{airlineUserIdNumber}" th:errorclass="is-invalid" id="airlineUserIdNumber" name="airlineUserIdNumber"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="airline : ${existingAirlines}" th:value="${airline.getId()}"
+                                        th:text="${airline.getAirlineName()}"></option>
+                            </select>
+                            <small id="airlineUserIdError" th:each="e : ${#fields.errors('airlineUserIdNumber')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="singlebutton" name="singlebutton" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+
+                <h2 class="header-home">Airplanes</h2>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">Manufacturer</th>
+                        <th onclick="sortTable(1)" class="text-center">Model</th>
+                        <th onclick="sortTable(1)" class="text-center">Registration Number</th>
+                        <th onclick="sortTable(1)" class="text-center">Capacity</th>
+                        <th onclick="sortTable(1)" class="text-center">Parking area (m2)</th>
+                        <th onclick="sortTable(1)" class="text-center">Airline Owner</th>
+                        <th onclick="sortTable(1)" class="text-center">Airline User</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="airplane : ${existingAirplanes}" th:object="${airplane}">
+                        <td th:text="*{manufacturer}" class="text-center"></td>
+                        <td th:text="*{model}" class="text-center"></td>
+                        <td th:text="*{registrationNumber}" class="text-center"></td>
+                        <td th:text="*{capacity}" class="text-center"></td>
+                        <td th:text="*{parkingArea}" class="text-center"></td>
+                        <td th:text="*{airlineOwner}" class="text-center"></td>
+                        <td th:text="*{airlineUser}" class="text-center"></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

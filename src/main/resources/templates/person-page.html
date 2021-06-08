@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+            <form class="form" th:object="${personBindingModel}" th:action="@{${action}}"
+                  th:method="post">
+                <h1 th:if="${crew}" class="header-home">Add A Crew Member</h1>
+                <h1 th:unless="${crew}" class="header-home">Add A Passenger</h1>
+
+                <h3 th:if="${existingPerson}"
+                    class="text-light form-text bg-danger rounded">There is already a person with the given id number</h3>
+                <h3 th:if="${existingDetails}"
+                    class="text-light form-text bg-danger rounded">There is already a person with the given email and/or telephone</h3>
+                <!-- Form start -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">First name</label>
+                            <input th:field="*{firstName}" th:errorclass="is-invalid" type="text" name="firstName"
+                                   placeholder="First name..." required minlength="3"/>
+                            <small th:each="e : ${#fields.errors('firstName')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Last name</label>
+                            <input th:field="*{lastName}" th:errorclass="is-invalid" type="text" name="lastName"
+                                   placeholder="Last name..." required minlength="3" />
+                            <small th:each="e : ${#fields.errors('lastName')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <input th:field="*{email}" th:errorclass="is-invalid" type="email" name="email" placeholder="Email..." required autofocus/>
+                            <small th:each="e : ${#fields.errors('email')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Telephone</label>
+                            <input th:field="*{telephone}" th:errorclass="is-invalid" name="telephone" type="tel"
+                                   placeholder="0..." class="form-control input-md" required autofocus>
+                            <small th:each="e : ${#fields.errors('telephone')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">ID Number</label>
+                            <input th:field="*{idNumber}" th:errorclass="is-invalid" name="idNumber" type="number"
+                                   placeholder="ID Number..." minlength="10" maxlength="10" class="form-control input-md" required autofocus>
+                            <small th:each="e : ${#fields.errors('idNumber')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Date of birth</label>
+                            <input th:field="*{dateOfBirth}" th:errorclass="is-invalid" type="date" min="1900-01-01" max="9999-12-31" name="dateOfBirth" required />
+                            <small id="dateOfBirthError" th:each="e : ${#fields.errors('dateOfBirth')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <div th:if="${crew}" class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Flight Crew Job position:</label>
+                            <select th:field="*{crewJobPosition}" th:errorclass="is-invalid" name="crewJobPosition"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="j : ${T(is.job.airlines.model.enums.FlightCrewJobsEnum).values()}"
+                                        th:value="${j.name()}" th:text="${j.name()}"></option>
+                            </select>
+                            <small th:each="e : ${#fields.errors('crewJobPosition')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+
+                    <div th:if="${crew}" class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Airline employer:</label>
+                            <select th:field="*{employerId}" th:errorclass="is-invalid" name="employerId"
+                                    class="form-control"  required autofocus>
+                                <option value=""></option>
+                                <option th:each="airline : ${airlines}" th:value="${airline.getId()}"
+                                        th:text="${airline.getAirlineName()}"></option>
+                            </select>
+                            <small th:each="e : ${#fields.errors('employerName')}" th:text="${e}"
+                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                        </div>
+                    </div>
+                    <!-- Button -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="singlebutton" name="singlebutton" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+
+                <h2 th:if="${crew}" class="header-home">Flight crew</h2>
+                <h2 th:unless="${crew}" class="header-home">Passengers</h2>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">First name</th>
+                        <th onclick="sortTable(1)" class="text-center">Last name</th>
+                        <th onclick="sortTable(1)" class="text-center">Email</th>
+                        <th onclick="sortTable(1)" class="text-center">Telephone</th>
+                        <th onclick="sortTable(1)" class="text-center">ID Number</th>
+                        <th th:if="${crew}" onclick="sortTable(1)" class="text-center">Job position</th>
+                        <th th:if="${crew}" onclick="sortTable(1)" class="text-center">Airline employer</th>
+                        <th class="text-center"></th>
+                    </tr>
+                    </thead>
+                    <tr th:each="person : ${people}" th:object="${person}">
+                        <td th:text="*{firstName}" class="text-center"></td>
+                        <td th:text="*{lastName}" class="text-center"></td>
+                        <td th:text="*{email}" class="text-center"></td>
+                        <td th:text="*{telephone}" class="text-center"></td>
+                        <td th:text="*{idNumber}" class="text-center"></td>
+                        <td th:if="${crew}" th:text="*{crewJobPosition}" class="text-center"></td>
+                        <td th:if="${crew}" th:text="*{employerName}" class="text-center"></td>
+                        <td class="text-center">
+                            <a th:if="${crew}" th:href="@{/flights/add/{id}(id = *{id})}"
+                               class="btn btn-primary btn-xs"><span class="glyphicon "></span>
+                                Add Flight</a>
+                            <a th:unless="${crew}" th:href="@{/flights/add/{id}(id = *{id})}"
+                               class="btn btn-primary btn-xs"><span class="glyphicon "></span>
+                                Add Flight</a>
+                        </td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>
