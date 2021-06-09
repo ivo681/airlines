@@ -10,6 +10,7 @@ import java.util.Set;
 public class Flight extends BaseEntity{
     private FlightRoute flightRoute;
     private Airplane airplane;
+    private Long number;
     private LocalDateTime departureDateAndTime;
     private LocalDateTime arrivalDateAndTime;
     private Set<Person> people = new HashSet<Person>();
@@ -62,7 +63,12 @@ public class Flight extends BaseEntity{
         this.arrivalDateAndTime = arrivalDateAndTime;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REFRESH,
+            CascadeType.REMOVE
+    })
     @JoinTable(name = "flights_people",
             joinColumns = @JoinColumn(name="flight_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="person_id", referencedColumnName = "id"))
@@ -72,5 +78,14 @@ public class Flight extends BaseEntity{
 
     public void setPeople(Set<Person> people) {
         this.people = people;
+    }
+
+    @Column(name = "number", nullable = false)
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
     }
 }

@@ -16,12 +16,7 @@
             <div class="table-responsive form">
                 <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
 
-                <h1 class="header-home">Upcoming Flights</h1>
-                <h3 th:if="${noCapacity}"
-                    class="text-light form-text bg-danger rounded">This flight has reached its maximum capacity, please select another</h3>
-                <h3 th:if="${alreadyOnFlight}"
-                    class="text-light form-text bg-danger rounded">The selected person is already on the flight list</h3>
-
+                <h2 class="header-home">Flight list</h2>
                 <table id="myTable" class="table table-striped custab container table-sm">
                     <thead>
                     <tr>
@@ -30,25 +25,19 @@
                         <th onclick="sortTable(1)" class="text-center">Flight number</th>
                         <th onclick="sortTable(1)" class="text-center">Departure Date & Time</th>
                         <th onclick="sortTable(1)" class="text-center">Arrival Date & Time</th>
-                        <th class="text-center"></th>
                     </tr>
                     </thead>
-                    <tr th:each="flight : ${upcomingFlights}" th:object="${flight}">
+                    <tbody>
+                    <tr th:each="flight : ${flightList}" th:object="${flight}">
                         <td th:text="*{airplane}" class="text-center"></td>
                         <td th:text="*{flightRoute}" class="text-center"></td>
                         <td th:text="*{number}" class="text-center"></td>
                         <td th:text="*{departureDateAndTime}" class="text-center"></td>
                         <td th:text="*{arrivalDateAndTime}" class="text-center"></td>
-                        <td class="text-center">
-                            <a th:if="${crew}" th:href="@{/flights/add/{personId}/{id}(personId = ${personId}, id = *{id})}"
-                               class="btn btn-primary btn-xs"><span class="glyphicon "></span>
-                                Add to Crew</a>
-                            <a th:unless="${crew}" th:href="@{/flights/add/{personId}/{id}(personId = ${personId}, id = *{id})}"
-                               class="btn btn-primary btn-xs"><span class="glyphicon "></span>
-                                Add to Passengers</a>
-                        </td>
                     </tr>
+                    </tbody>
                 </table>
+                <!-- </div> -->
             </div>
         </section>
     </main>

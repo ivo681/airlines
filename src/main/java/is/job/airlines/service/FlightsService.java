@@ -30,4 +30,6 @@ public interface FlightsService {
     List<PersonViewModel> getFlightList(String flightId);
 
     void seedFlights() throws IOException;
+
+    List<FlightViewModel> getPersonFlightHistory(String personId);
 }

@@ -85,6 +85,7 @@
                     <tr>
                         <th onclick="sortTable(0)" class="text-center">Airplane</th>
                         <th onclick="sortTable(1)" class="text-center">Flight Route</th>
+                        <th onclick="sortTable(1)" class="text-center">Flight number</th>
                         <th onclick="sortTable(1)" class="text-center">Departure Date & Time</th>
                         <th onclick="sortTable(1)" class="text-center">Arrival Date & Time</th>
                         <th class="text-center"></th>
@@ -94,6 +95,7 @@
                     <tr th:each="flight : ${existingFlights}" th:object="${flight}">
                         <td th:text="*{airplane}" class="text-center"></td>
                         <td th:text="*{flightRoute}" class="text-center"></td>
+                        <td th:text="*{number}" class="text-center"></td>
                         <td th:text="*{departureDateAndTime}" class="text-center"></td>
                         <td th:text="*{arrivalDateAndTime}" class="text-center"></td>
                         <td class="text-center">

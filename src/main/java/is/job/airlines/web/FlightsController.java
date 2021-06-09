@@ -99,6 +99,13 @@ public class FlightsController {
         return "add-to-flight-page";
     }
 
+    @GetMapping("/{id}")
+    public String getPersonsFlightHistory(@PathVariable("id") String personId,
+                                        Model model){
+        model.addAttribute("flightList", this.flightsService.getPersonFlightHistory(personId));
+        return "person-flight-list";
+    }
+
     @GetMapping("/add/{personId}/{flightId}")
     public String addPersonToFlight(@PathVariable("personId") String personId,
                                     @PathVariable("flightId") String flightId, RedirectAttributes redirectAttributes,

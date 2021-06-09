@@ -5,7 +5,6 @@ import is.job.airlines.model.Airplane;
 import is.job.airlines.model.Flight;
 import is.job.airlines.model.FlightRoute;
 import is.job.airlines.model.Person;
-import is.job.airlines.model.dtos.AirlineSeedDto;
 import is.job.airlines.model.dtos.FlightSeedDto;
 import is.job.airlines.model.service.FlightServiceModel;
 import is.job.airlines.model.view.FlightViewModel;
@@ -62,6 +61,7 @@ public class FlightsServiceImpl implements FlightsService {
     @Override
     public void saveFlight(FlightServiceModel flightServiceModel) {
         Flight flight = this.modelMapper.map(flightServiceModel, Flight.class);
+        flight.setNumber(generateFlightNumber());
         flight.setAirplane(this.airplaneRepository.findById(flightServiceModel.getAirplaneId()).get());
         flight.setFlightRoute(this.flightRouteRepository.findById(flightServiceModel.getFlightRouteId()).get());
         this.flightRepository.save(flight);
@@ -159,6 +159,7 @@ public class FlightsServiceImpl implements FlightsService {
                 }
                 flight.setFlightRoute(flightRoute);
                 flight.setAirplane(airplane);
+                flight.setNumber(generateFlightNumber());
                 flight = this.flightRepository.save(flight);
                 while (flight.getPeople().size() < 10){
                     index = random.nextInt(crewAndPassengers.size());
@@ -171,5 +172,31 @@ public class FlightsServiceImpl implements FlightsService {
             }
         }
     }
+
+    @Override
+    public List<FlightViewModel> getPersonFlightHistory(String personId){
+        return this.personRepository.findById(personId).get().getFlights().stream().map(flight -> {
+            FlightViewModel flightViewModel = this.modelMapper.map(flight, FlightViewModel.class);
+            flightViewModel.setFlightRoute(String.format("%s (%s) - %s (%s)",
+                    flight.getFlightRoute().getDepartureAirport().getAirportName(), flight.getFlightRoute().getDepartureAirport().getCountry(),
+                    flight.getFlightRoute().getArrivalAirport().getAirportName(), flight.getFlightRoute().getArrivalAirport().getCountry()));
+            flightViewModel.setAirplane(String.format("%s %s %s", flight.getAirplane().getAirlineUser().getAirlineName(),
+                    flight.getAirplane().getModel(), flight.getAirplane().getRegistrationNumber()));
+            return flightViewModel;
+        }).collect(Collectors.toList());
+    }
+
+    private Long generateFlightNumber() {
+        long flightNumber = (10000000 + this.random.nextInt(9000000));
+        while (isNumberTaken(flightNumber)) {
+            flightNumber = (10000000 + this.random.nextInt(9000000));
+        }
+        return flightNumber;
+    }
+
+    private boolean isNumberTaken(long flightNumber) {
+        return this.flightRepository.findByFlightNumber(flightNumber).isPresent();
+    }
+
 
 }

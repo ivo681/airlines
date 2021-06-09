@@ -6,6 +6,7 @@ public class FlightViewModel {
     private String id;
     private String flightRoute;
     private String airplane;
+    private Long number;
     private LocalDateTime departureDateAndTime;
     private LocalDateTime arrivalDateAndTime;
 
@@ -50,5 +51,13 @@ public class FlightViewModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
     }
 }

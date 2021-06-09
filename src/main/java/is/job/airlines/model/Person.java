@@ -103,7 +103,7 @@ public class Person extends BaseEntity{
         this.employer = employer;
     }
 
-    @ManyToMany(mappedBy = "people", targetEntity = Flight.class, cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "people", targetEntity = Flight.class, cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     public Set<Flight> getFlights() {
         return flights;
     }
